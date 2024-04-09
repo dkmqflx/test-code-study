@@ -17,7 +17,7 @@ it('className prop으로 설정한 css class가 적용된다.', async () => {
    * -> 클릭이나 메서드 호출, prop 변경 등등에 대한 작업이 여기에 해당
    *
    * Assert - 올바른 동작이 실행되었는지 검증
-   * -> 렌더링 후 DOM에 해당 classs가 존재하는지 검증
+   * -> 렌더링 후 DOM에 해당 class가 존재하는지 검증
    */
 
   // render API 호출 -> 테스트 환경의 jsDOM에 리액트 컴포넌트가 렌더링된 DOM 구조가 반영
@@ -30,15 +30,24 @@ it('className prop으로 설정한 css class가 적용된다.', async () => {
   // className이란 내부 prop이나 state 값을 검증 (X)
   // 렌더링되는 DOM 구조가 올바르게 변경되었는지 확인 (O) -> 최종적으로 사용자가 보는 결과는 DOM
   expect(textInput).toHaveClass('my-class');
+  // 단언(assertion) -> 테스트가 통과하기 위한 조건 -> 검증실행
 });
 
+// describe 함수는 테스트를 그룹화해서 독립된 컨텍스트를 만드는 역할
+// 아래는 placeholder 단위로 그룹을 묶은 것
 describe('placeholder', () => {
+  // it 함수내에서는 내가 원하는 기대결과를 정의한다
+  // 기대결과 === 실제결과 -> 성공
+  // it 함수는 test 함수의 alias
+  // it을 사용하면 it('should~~~') 처럼 should로 시작해서 작성 경우가 많고
+  // test를 사용하면 test('if~~~~')처러 if로 시작해서 작성하는 경우가 많다
   it('기본 placeholder "텍스트를 입력해 주세요."가 노출된다.', async () => {
     await render(<TextField />);
 
     const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.');
 
     expect(textInput).toBeInTheDocument();
+    // 이러한 기대결과를 검증하기 위한 api를 matcher라고 한다
   });
 
   it('placeholder prop에 따라 placeholder가 변경된다.', async () => {
