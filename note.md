@@ -13,3 +13,17 @@
 ### 3. Assert
 
 - 우리가 원하는 대로 결과가 나왔는지 검증하는 코드
+
+<br/>
+
+## 2.3 setup과 teardown
+
+- 테스트가 시작 전 후에 다른 테스트에 영향을 미치지 않도록 초기화나 데이터 세팅을 다시하도록 한다
+
+- [공식문서 - Setup and Teardown](https://vitest.dev/api/#setup-and-teardown)
+
+  - setup: before-\*
+
+  - teardown: after-\*
+
+- setup과 teardown 함수를 전역적으로 선언할 수도 있지만, describe 안에 작성해서 해당 describe 안에서만 작동하도록 할 수 있다.
