@@ -1,5 +1,6 @@
 import { pick, debounce } from './common';
 
+// 이렇게 공통적으로 사용되는 유틸 함수도 테스트코드를 작성해주어야 한다.
 describe('pick util 단위테스트', () => {
   it('단일 인자로 전달된 키의 값을 객체에 담아 반환한다', () => {
     const obj = {
