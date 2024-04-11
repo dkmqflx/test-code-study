@@ -60,11 +60,16 @@ describe('placeholder', () => {
 });
 
 it('텍스트를 입력하면 onChange prop으로 등록한 함수가 호출된다.', async () => {
-  const spy = vi.fn();
+  const spy = vi.fn(); // 스파이 함수를 만드는데 사용된다
+  // 스파이 함수: 테스트 코드에서 특정 함수가 호출되었는지, 함수의 인자로 어떤 것이 넘어왔는지,
+  // 어떤 값을 반환하는지 등 다양한 값들을 저장
 
   const { user } = await render(<TextField onChange={spy} />);
 
   const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.');
+
+  // 요소를 가져오는 많은 쿼리가 있지만 우선순위가 높은 방식으로 검색하는 것이 좋다
+  // https://testing-library.com/docs/queries/about/#priority
 
   await user.type(textInput, 'test');
 
@@ -79,6 +84,7 @@ it('엔터키를 입력하면 onEnter prop으로 등록한 함수가 호출된�
   const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.');
 
   await user.type(textInput, 'test{Enter}');
+  // https://testing-library.com/docs/user-event/v13/#typeelement-text-options
 
   expect(spy).toHaveBeenCalledWith('test');
 });
@@ -95,6 +101,10 @@ it('포커스가 활성화되면 onFocus prop으로 등록한 함수가 호출�
 });
 
 it('포커스가 활성화되면 border 스타일이 추가된다.', async () => {
+  // 포커스 활성화 할 수 있는 경우는 아래 세가지가 있지만ㅇ 인풋 요소를 클릭한 경우가 가장 일반적이므로 해당 케이스로 테스트 작성
+  // 탭 키로 인풋 요소로 포커스 이동
+  // 인풋 요소를 클릭했을 때
+  // textInput.focus()로 직접 발생
   const { user } = await render(<TextField />);
 
   const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.');
