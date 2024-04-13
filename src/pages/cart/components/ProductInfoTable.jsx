@@ -7,6 +7,8 @@ import { useUserStore } from '@/store/user';
 import { pick } from '@/utils/common';
 
 const ProductInfoTable = () => {
+  // 테스트 실행 전에 zustand 스토어의 state를 원하는 대로 변경 필요
+  // https://docs.pmnd.rs/zustand/guides/testing
   const { cart, removeCartItem, changeCartItemCount } = useCartStore(state =>
     pick(state, 'cart', 'removeCartItem', 'changeCartItemCount'),
   );
