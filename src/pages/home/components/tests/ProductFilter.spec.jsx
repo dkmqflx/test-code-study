@@ -21,6 +21,7 @@ beforeEach(() => {
 it('카테고리 목록을 가져온 후 카테고리 필드의 정보들이 올바르게 렌더링된다.', async () => {
   await render(<ProductFilter />);
 
+  // 비동기적으로 데이터를 가져오기 때문에 findBy 사용했다.
   expect(await screen.findByLabelText('category1')).toBeInTheDocument();
   expect(await screen.findByLabelText('category2')).toBeInTheDocument();
   expect(await screen.findByLabelText('category3')).toBeInTheDocument();
@@ -37,6 +38,7 @@ it('상품명을 수정하는 경우 setTitle 액션이 호출된다.', async ()
 
 it('카테고리를 클릭 할 경우의 클릭한 카테고리가 체크된다.', async () => {
   const { user } = await render(<ProductFilter />);
+  // 라디오 클릭 -> setCategoryId -> categoryId state 변경 -> 선택된 라디오 값 변경
 
   const category3 = await screen.findByLabelText('category3');
   await user.click(category3);
