@@ -52,6 +52,7 @@ const Purchase = () => {
   });
 
   return (
+    // ShippingInformationForm 테스트하기 위해서는 Formprovider 컨텍스트로 감싸진 형태가 되어야 함
     <FormProvider {...methods}>
       <Layout
         containerStyle={{ paddingTop: '30px' }}
@@ -60,9 +61,13 @@ const Purchase = () => {
         <Backdrop sx={{ color: '#fff', zIndex: 10000 }} open={isLoading}>
           <CircularProgress color="inherit" />
         </Backdrop>
+
         <ShippingInformationForm />
+
         <ItemList />
+
         <Payment />
+
         <Box
           sx={{
             paddingTop: 2,
