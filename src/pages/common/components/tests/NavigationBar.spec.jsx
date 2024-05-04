@@ -34,7 +34,12 @@ it('"Wish Mart" 사이트 제목을 클릭할 경우 "/" 경로로 navigate가 �
 describe('로그인이 된 경우', () => {
   const userId = 10;
 
+  // 로그인 상태와 장바구니 상품에 대한 스토어 모킹
   beforeEach(() => {
+    // NavigationBar를 보면 useProfile 훅을 사용해서 API 통신을 통해 데이터를 가져오고 있는 만큼 이를 다시 모킹한다.
+    // 기존 handlers.js 응답 -> use 함수 내에 응답을 기준으로 테스트 실행
+    // 테스트가 완료된 후 기존 handler.js의 응답을 바라보도록 초기화 설정해야 하지 않을까?
+    // -> setupTest.js의  server.resetHandlers() 함수가 그 역할을 한다
     server.use(
       rest.get('/user', (_, res, ctx) => {
         return res(
@@ -81,11 +86,14 @@ describe('로그인이 된 경우', () => {
     mockUseCartStore({ cart });
   });
 
+  // 장바구니 및 로그인 여부 외에 사용자 정보 필요
   it('장바구니(담긴 상품 수와 버튼)와 로그아웃 버튼(사용자 이름: "Maria")이 노출된다.', async () => {
     await render(<NavigationBar />);
 
     expect(screen.getByTestId('cart-icon')).toBeInTheDocument();
     expect(screen.getByText('2')).toBeInTheDocument();
+
+    // 사용자 정보를 가져오기 위한 API 응답이 있으므로 findBy 사용
     expect(
       await screen.findByRole('button', { name: 'Maria' }),
     ).toBeInTheDocument();
@@ -100,7 +108,9 @@ describe('로그인이 된 경우', () => {
     expect(navigateFn).toHaveBeenNthCalledWith(1, '/cart');
   });
 
+  // 모두 모달과 관련 있기 때문에 describe로 묶어 주었다.
   describe('로그아웃 버튼(사용자 이름: "Maria")을 클릭하는 경우', () => {
+    // 반복되는 부분 beforeEach로 설정
     let userEvent;
     beforeEach(async () => {
       const { user } = await render(<NavigationBar />);
@@ -127,9 +137,12 @@ describe('로그인이 된 경우', () => {
       expect(
         screen.getByRole('button', { name: '로그인' }),
       ).toBeInTheDocument();
+
+      // 요소의 존재 여부 확인할 때는 queryBy
       expect(
         screen.queryByRole('button', { name: 'Maria' }),
       ).not.toBeInTheDocument();
+
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
