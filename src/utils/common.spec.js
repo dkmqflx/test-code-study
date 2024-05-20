@@ -1,5 +1,6 @@
 import { pick, debounce } from './common';
 
+// 아래처럼 스냅샷 테스트는 컴포넌트 뿐 아니라 유틸 함수를 대상으로 진행할 수 도 있다.
 describe('pick util 단위테스트', () => {
   it('단일 인자로 전달된 키의 값을 객체에 담아 반환한다', () => {
     const obj = {
@@ -18,6 +19,7 @@ describe('pick util 단위테스트', () => {
       d: null,
     };
 
+    // 객체 내에 복잡한 프로퍼티가 있다면 이러한 스냅샷 테스트가 유용하다
     expect(pick(obj, 'a')).toMatchInlineSnapshot(`
       {
         "a": "A",
