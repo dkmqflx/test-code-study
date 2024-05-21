@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cors());
 
 function wait(amount = 0) {
-  return new Promise((resolve) => setTimeout(resolve, amount));
+  return new Promise(resolve => setTimeout(resolve, amount));
 }
 
 function getRandomArbitrary(min, max) {
@@ -40,34 +40,47 @@ function getProductsByCategoryId(products, categoryId) {
   const numberCategoryId = Number(categoryId);
 
   return numberCategoryId > 0 && numberCategoryId < 6
-    ? products.filter((item) => item.category.id === numberCategoryId)
+    ? products.filter(item => item.category.id === numberCategoryId)
     : products;
 }
 
 function getProductsByPrice(products, price) {
-  return price ? products.filter((item) => item.price === Number(price)) : products;
+  return price
+    ? products.filter(item => item.price === Number(price))
+    : products;
 }
 
 function getProductsByPriceRange({ products, minPrice, maxPrice }) {
   const minValue = minPrice ? Number(minPrice) : Number.MIN_SAFE_INTEGER;
   const maxValue = maxPrice ? Number(maxPrice) : Number.MAX_SAFE_INTEGER;
 
-  return products.filter((item) => item.price >= minValue && item.price <= maxValue);
+  return products.filter(
+    item => item.price >= minValue && item.price <= maxValue,
+  );
 }
 
 function getProductsByTitle(products, title) {
-  return title ? products.filter((item) => item.title.includes(title)) : products;
+  return title ? products.filter(item => item.title.includes(title)) : products;
 }
 
 function getFilteredProductsByQuery(products, query) {
-  const productsFilteredByCategoryId = getProductsByCategoryId(products, query.categoryId);
+  const productsFilteredByCategoryId = getProductsByCategoryId(
+    products,
+    query.categoryId,
+  );
   const productsFilteredByPriceRange = getProductsByPriceRange({
     products: productsFilteredByCategoryId,
     minPrice: query.minPrice,
     maxPrice: query.maxPrice,
   });
-  const productsFilteredByPrice = getProductsByPrice(productsFilteredByPriceRange, query.price);
-  const productsFilteredByTitle = getProductsByTitle(productsFilteredByPrice, query.title);
+  const productsFilteredByPrice = getProductsByPrice(
+    productsFilteredByPriceRange,
+    query.price,
+  );
+  const productsFilteredByTitle = getProductsByTitle(
+    productsFilteredByPrice,
+    query.title,
+  );
 
   return productsFilteredByTitle;
 }
@@ -75,7 +88,8 @@ function getFilteredProductsByQuery(products, query) {
 function getSliceIndex(products, query) {
   const offset = query.offset ? Number(query.offset) : 0;
   const limit = query.limit ? Number(query.limit) : products.length;
-  const endIndex = offset + limit > products.length ? products.length : offset + limit;
+  const endIndex =
+    offset + limit > products.length ? products.length : offset + limit;
 
   return {
     startIndex: offset,
@@ -89,7 +103,11 @@ const IV_LENGTH = 16; // For AES, this is always 16
 
 function encrypt(text) {
   let iv = crypto.randomBytes(IV_LENGTH);
-  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(SECURITY_KEY), iv);
+  let cipher = crypto.createCipheriv(
+    'aes-256-cbc',
+    Buffer.from(SECURITY_KEY),
+    iv,
+  );
   let encrypted = cipher.update(text);
 
   encrypted = Buffer.concat([encrypted, cipher.final()]);
@@ -101,7 +119,11 @@ function decrypt(text) {
   let textParts = text.split(':');
   let iv = Buffer.from(textParts.shift(), 'hex');
   let encryptedText = Buffer.from(textParts.join(':'), 'hex');
-  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(SECURITY_KEY), iv);
+  let decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    Buffer.from(SECURITY_KEY),
+    iv,
+  );
   let decrypted = decipher.update(encryptedText);
 
   decrypted = Buffer.concat([decrypted, decipher.final()]);
@@ -126,10 +148,14 @@ app.get('/user', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const result = usersJSON.users.find((user) => user.email === email && user.password === password);
+  const result = usersJSON.users.find(
+    user => user.email === email && user.password === password,
+  );
 
   if (!result) {
-    return res.status(401).send({ errorCode: 401000, message: '정보가 일치하지 않습니다.' });
+    return res
+      .status(401)
+      .send({ errorCode: 401000, message: '정보가 일치하지 않습니다.' });
   }
 
   const cookieConfig = {
@@ -148,27 +174,35 @@ app.post('/users', (req, res) => {
   const { users } = usersJSON;
 
   if (!password.length) {
-    return res
-      .status(400)
-      .send({ field: 'password', errorCode: 400001, message: '패스워드를 입력해주세요!' });
+    return res.status(400).send({
+      field: 'password',
+      errorCode: 400001,
+      message: '패스워드를 입력해주세요!',
+    });
   }
 
   if (!name.length) {
-    return res
-      .status(400)
-      .send({ field: 'name', errorCode: 400002, message: '이메일을 입력해주세요!' });
+    return res.status(400).send({
+      field: 'name',
+      errorCode: 400002,
+      message: '이메일을 입력해주세요!',
+    });
   }
 
   if (!email.length || !EMAIL_PATTERN.test(email)) {
-    return res
-      .status(400)
-      .send({ field: 'email', errorCode: 400003, message: '잘못된 이메일 양식입니다!' });
+    return res.status(400).send({
+      field: 'email',
+      errorCode: 400003,
+      message: '잘못된 이메일 양식입니다!',
+    });
   }
 
-  if (users.find((user) => user.email === email)) {
-    return res
-      .status(400)
-      .send({ field: 'email', errorCode: 400004, message: '이미 존재하는 메일입니다!' });
+  if (users.find(user => user.email === email)) {
+    return res.status(400).send({
+      field: 'email',
+      errorCode: 400004,
+      message: '이미 존재하는 메일입니다!',
+    });
   }
 
   const newUser = { id: users.length + 1, name, email, password };
@@ -213,6 +247,8 @@ app.get('/couponList', (_, res) => {
 });
 
 app.post('/purchase', async (_, res) => {
+  // 랜덤한 확률로 구매하기 실패
+  // 개발서버에서 구매 실패 시나리오에 대한 동작도 함께 보여주기 위해 임의로 작성한 코드
   const waitTime = getRandomArbitrary(100, 5000);
   await wait(waitTime);
   const result = getResult();
@@ -238,7 +274,7 @@ app.post('/log', (req, res) => {
   fs.appendFileSync(
     './server/paymentResult.log',
     `LOG[${level}]: userId: ${userId} | date: ${new Date()} | message: ${message}\n`,
-    (error) => {
+    error => {
       throw error;
     },
   );
