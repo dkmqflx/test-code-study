@@ -1,6 +1,7 @@
 // Cypress testing library -> getBy쿼리가 따로 없으며 findBy* 와 findAllBy* 를 사용해아 함 -> retry-ability 기능 사용하기 때문
 import '@testing-library/cypress/add-commands';
 
+// 로그인과 관련된 커스텀 커맨드
 Cypress.Commands.add('login', () => {
   const username = 'maria@mail.com';
   const password = '12345';
@@ -20,18 +21,25 @@ Cypress.Commands.add('logout', () => {
   cy.findByRole('button', { name: '확인' }).click();
 });
 
+// 현재 접속한 url이 특정 url과 동일한지 검증하는 단언 커맨드
 Cypress.Commands.add('assertUrl', url => {
   cy.url().should('eq', `${Cypress.env('baseUrl')}${url}`);
 });
 
+// 특정 인덱스에 해당하는 상품 카드 요소를 조회하여 반환한다
 Cypress.Commands.add('getProductCardByIndex', index => {
   return cy.findAllByTestId('product-card').eq(index);
 });
 
+// 커스텀 쿼리
 Cypress.Commands.addQuery('getCartButton', () => {
+  // cy.now()로 감싸 특정 쿼리를 호출 -> subject를 받아 inner function에서 쿼리(get)를 실행할 수 있음
   const getFn = cy.now('get', `[data-testid="cart-icon"]`);
 
+  // inner function 형태로 반환해야 함
   return subject => {
+    // cart-icon testid를 가진 요소를 조회하는 get 쿼리
+    // 우리가 원하는 subject를 기준으로 실행함
     const btn = getFn(subject);
 
     return btn;

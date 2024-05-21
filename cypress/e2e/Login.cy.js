@@ -74,14 +74,19 @@ it('성공적으로 로그인 되었을 경우 메인 홈 페이지로 이동하
   // 메인 페이지로 이동하여 사용자 계정 정보가 나타나는지 확인 가능
 
   // 이런 계졍 정보는 백엔드 팀과 미리 상의해서 정해놓도록 하는게 좋다
-  const username = 'maria@mail.com';
-  const password = '12345';
+  // const username = 'maria@mail.com';
+  // const password = '12345';
 
-  cy.findByLabelText('이메일').type(username);
-  cy.findByLabelText('비밀번호').type(password);
-  cy.findByLabelText('로그인').click();
+  // cy.findByLabelText('이메일').type(username);
+  // cy.findByLabelText('비밀번호').type(password);
+  // cy.findByLabelText('로그인').click();
 
-  cy.url().should('eq', `${Cypress.env('baseUrl')}/`);
+  // 커스텀 커맨드로 변환한 코드, 기존의 코드보다 더 간결하게 줄어들었다.
+  cy.login();
+
+  // cy.url().should('eq', `${Cypress.env('baseUrl')}/`);
+  cy.assertUrl('/');
+
   cy.findByText('Maria').should('exist');
   cy.findByTestId('cart-icon').should('exist');
 });
