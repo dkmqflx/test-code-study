@@ -1,6 +1,6 @@
 import { defineConfig } from 'cypress';
 
-const baseUrl = 'http://localhost:5173';
+const baseUrl = 'http://localhost:5173'; // baseUrl을 설정
 
 export default defineConfig({
   e2e: {

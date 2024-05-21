@@ -1,3 +1,4 @@
+// Cypress testing library -> getBy쿼리가 따로 없으며 findBy* 와 findAllBy* 를 사용해아 함 -> retry-ability 기능 사용하기 때문
 import '@testing-library/cypress/add-commands';
 
 Cypress.Commands.add('login', () => {
