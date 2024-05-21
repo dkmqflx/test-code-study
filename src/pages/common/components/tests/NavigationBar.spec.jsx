@@ -10,13 +10,30 @@ import {
 import render from '@/utils/test/render';
 import { server } from '@/utils/test/setupTests';
 
+// vi.fn()으로 생성된 함수 -> 스텁이자 스파이
 const navigateFn = vi.fn();
 
+// react-router-dom -> Mock
+// 실제 모듈과 거의 동일하게 구현 or 대체하기 쉽게 추상화된 모의 객체 -> 테스트 환경에서 실제 모듈 대체 가능
+// 모의 객체는 스텁처럼 정해진 값만 반환하는 것이 아니라 기대되는 예상 동작에 대한 구현을 완료한 것
+
+// 모킹 -> 행동 기반 검증
+// ex. 리액트 라우터의 경우 -> 페이지의 url과 쿼리 파라미터, 호출 횟수 등 페이지를 이동하는 행위에 대해 검증
+
+// 스텁 -> 상태 기준 검증
+// 반환한 값이 실제 상태 값에 올바르게 반영되었는지 상태를 기준으로 비교하여 검증한다
+// 하지만 프런트엔드에서 컴포넌트의 상태값을 기준으로 검증하는 것은 내부 구현에 대한 강한 의존성이 생겨 좋은 검증 방법이 아니다
+
+// 프런트엔드의 단위, 통합 테스트에서 스텁만 단독으로 사용하여 상태 값을 검증하는 경우는 거의 없음
+// 모의 객체나 실제 모듈의 구현에 스텁이나 스파이를 주입하여 행동을 검증하는 방식으로 테 스트 진행
 vi.mock('react-router-dom', async () => {
   const original = await vi.importActual('react-router-dom');
   return {
     ...original,
+    // 스파이 함수를 통해 페이지 이동에 필요한 값이 올바르게 전달되었는지 검증
     useNavigate: () => navigateFn,
+
+    // 고정된 값을 넘겨주는 스텁 함수로 대체
     useLocation: () => ({
       pathname: 'pathname',
     }),
@@ -49,6 +66,9 @@ describe('로그인이 된 경우', () => {
       }),
     );
     mockUseUserStore({ isLogin: true });
+    // Fake -> 카트 스토어의 내부 구현을 cart 변수라는 페이크 객체로 대체하고 있다.
+    // 이런 방식으로 실제로 사용되는 모듈의 모습은 아니지만 테스트 환경에 맞게 가짜로 구현된 함수나 객체를 페이크라고 한다
+    // 페이크 객체를 사용하면 실제 구현된 모듈이 없어도 신속하게 테스트를 실행할 수 있다는 장점이 있다.
 
     const cart = {
       6: {

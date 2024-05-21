@@ -21,6 +21,16 @@ const TestForm = props => {
   return (
     <FormProvider {...methods}>
       <ShippingInformationForm />
+      {/* 
+
+        react hook form의 handleSubmit 함수 실행 -> 폼 필드의 유효성 체크 로직을 검증하기 위함
+        handleSubmit 함수 인자로 더미(Dummy) 함수 전달
+
+        더미는 단순히 테스트 실행시 필요한 모듈이나 함수를 빈 껍데기 형태로 만든 것
+        -> 테스트 환경에서 호출만 가능하면 Ok인 경우 더미를 사용
+        별도 구현이 없기 때문에 어떠한 동작도 실행하지 않는다
+      
+      */}
       <button type="button" onClick={methods.handleSubmit(() => {})}>
         테스트 버튼
       </button>

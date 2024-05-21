@@ -52,7 +52,7 @@ describe('pick util 단위테스트', () => {
 
 describe('debounce', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
+    vi.useFakeTimers(); // 타이머 제어를 위해 사용한 것 역시 기존의 타이머를 테스트 환경에만 맞게 구현한 페이크 함수
   });
 
   afterEach(() => {
