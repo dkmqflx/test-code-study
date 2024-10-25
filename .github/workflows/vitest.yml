@@ -1,5 +1,5 @@
-name: 'vitest test'
-on: pull_request
+name: 'vitest test' # 워크 플로우 이름
+on: pull_request # 이벤트 지정
 jobs:
   Component-test:
     runs-on: ubuntu-latest
@@ -13,4 +13,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: run vitest
-        run: npm run test
+        run: npm run test # 테스트 실행
+
+# PR을 하나 만들게 되면 해당 워크플로우가 실행된다
+# 만약 실패한 테스트가 있으면 PR 하단에서 테스트가 실패했다는 것을 확인할 수 있다.
